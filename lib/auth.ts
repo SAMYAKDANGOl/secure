@@ -1,3 +1,5 @@
+"use client"
+
 // This is a simplified authentication utility
 // In a real application, you would connect this to your backend API
 
@@ -80,9 +82,15 @@ export async function signIn(email: string, password: string, rememberMe = false
     if (rememberMe) {
       // In a real app, you would use a secure HTTP-only cookie
       localStorage.setItem("auth_token", "demo_token_" + Date.now())
+
+      // Set a cookie that can be read by the server
+      document.cookie = `auth_token=demo_token_${Date.now()}; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`
     } else {
       // For session-only storage
       sessionStorage.setItem("auth_token", "demo_token_" + Date.now())
+
+      // Set a session cookie
+      document.cookie = `auth_token=demo_token_${Date.now()}; path=/; SameSite=Lax`
     }
 
     return {
@@ -109,12 +117,16 @@ export async function verifyTwoFactor(email: string, code: string): Promise<Veri
 
   // For demo purposes, we'll accept "123456" as a valid code
   if (code === "123456") {
-    // Sett auth token
-    localStorage.setItem("auth_token", "demo_token_" + Date.now())
+    // Set auth token
+    const token = "demo_token_" + Date.now()
+    localStorage.setItem("auth_token", token)
+
+    // Set a cookie that can be read by the server
+    document.cookie = `auth_token=${token}; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`
 
     return {
       success: true,
-      token: "demo_token",
+      token: token,
       message: "Two-factor authentication successful",
     }
   }
@@ -152,7 +164,11 @@ export async function signUp(data: SignUpData): Promise<SignUpResult> {
   }
 
   // Set auth token
-  localStorage.setItem("auth_token", "demo_token_" + Date.now())
+  const token = "demo_token_" + Date.now()
+  localStorage.setItem("auth_token", token)
+
+  // Set a cookie that can be read by the server
+  document.cookie = `auth_token=${token}; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`
 
   return {
     success: true,
@@ -170,12 +186,25 @@ export function signOut(): void {
   localStorage.removeItem("auth_token")
   sessionStorage.removeItem("auth_token")
 
+  // Clear the cookie
+  document.cookie = "auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax"
+
   // In a real app, you might also want to invalidate the token on the server
 }
 
 export function isAuthenticated(): boolean {
-  // Check if user is authenticated
-  return !!localStorage.getItem("auth_token") || !!sessionStorage.getItem("auth_token")
+  // For client-side usage
+  if (typeof window !== "undefined") {
+    // Check localStorage, sessionStorage, and cookies
+    const hasLocalStorage = !!localStorage.getItem("auth_token")
+    const hasSessionStorage = !!sessionStorage.getItem("auth_token")
+    const hasCookie = document.cookie.split(";").some((item) => item.trim().startsWith("auth_token="))
+
+    return hasLocalStorage || hasSessionStorage || hasCookie
+  }
+
+  // For server-side usage (will always return false)
+  return false
 }
 
 export function generateTwoFactorQRCode(email: string): string {
