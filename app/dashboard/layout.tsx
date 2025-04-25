@@ -182,6 +182,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 API Keys
                               </Link>
                             </Button>
+                            <Button
+                              variant={isActive("/dashboard/sam-config") ? "default" : "ghost"}
+                              className="w-full justify-start"
+                              asChild
+                              onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                              <Link href="/dashboard/sam-config">
+                                <Shield className="mr-2 h-4 w-4" />
+                                SAM Config
+                              </Link>
+                            </Button>
                           </div>
 
                           <div className="mb-4">
@@ -339,6 +350,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   <Link href="/dashboard/api-keys">
                     <Key className="mr-2 h-4 w-4" />
                     API Keys
+                  </Link>
+                </Button>
+                <Button
+                  variant={isActive("/dashboard/sam-config") ? "default" : "ghost"}
+                  className="w-full justify-start"
+                  asChild
+                >
+                  <Link href="/dashboard/sam-config">
+                    <Shield className="mr-2 h-4 w-4" />
+                    SAM Config
                   </Link>
                 </Button>
               </div>
