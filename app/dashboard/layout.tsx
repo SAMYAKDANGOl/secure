@@ -5,7 +5,21 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { Shield, Search, Bell, User, LogOut, Settings, Upload, Star, Clock, Folder, Share2, Menu } from "lucide-react"
+import {
+  Shield,
+  Search,
+  Bell,
+  User,
+  LogOut,
+  Settings,
+  Upload,
+  Star,
+  Clock,
+  Folder,
+  Share2,
+  Menu,
+  Key,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -157,6 +171,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 Settings
                               </Link>
                             </Button>
+                            <Button
+                              variant={isActive("/dashboard/api-keys") ? "default" : "ghost"}
+                              className="w-full justify-start"
+                              asChild
+                              onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                              <Link href="/dashboard/api-keys">
+                                <Key className="mr-2 h-4 w-4" />
+                                API Keys
+                              </Link>
+                            </Button>
                           </div>
 
                           <div className="mb-4">
@@ -304,6 +329,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   <Link href="/dashboard/settings">
                     <Settings className="mr-2 h-4 w-4" />
                     Settings
+                  </Link>
+                </Button>
+                <Button
+                  variant={isActive("/dashboard/api-keys") ? "default" : "ghost"}
+                  className="w-full justify-start"
+                  asChild
+                >
+                  <Link href="/dashboard/api-keys">
+                    <Key className="mr-2 h-4 w-4" />
+                    API Keys
                   </Link>
                 </Button>
               </div>

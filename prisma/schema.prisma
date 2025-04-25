@@ -28,6 +28,7 @@ model User {
   folders       Folder[]
   accounts      Account[]
   sessions      Session[]
+  apiKeys       ApiKey[]
 }
 
 model Account {
@@ -123,4 +124,18 @@ model FolderShare {
   createdAt   DateTime @default(now())
   
   folder      Folder   @relation(fields: [folderId], references: [id], onDelete: Cascade)
+}
+
+model ApiKey {
+  id          String   @id @default(cuid())
+  name        String
+  key         String   @unique
+  userId      String
+  permissions String[]  // Array of permissions: "read", "write", "delete"
+  expiresAt   DateTime?
+  lastUsed    DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

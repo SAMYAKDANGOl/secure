@@ -28,7 +28,6 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
 import { Switch } from "@/components/ui/switch"
-import { signUp } from "@/lib/auth"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 export default function SignUpPage() {
@@ -103,25 +102,33 @@ export default function SignUpPage() {
         }
       }
 
-      // Call the signup function
-      const result = await signUp({
-        firstName,
-        lastName,
-        email,
-        password,
-        accountType,
-        company: accountType === "business" ? company : undefined,
-        twoFactorEnabled: enableTwoFactor,
+      // Call the registration API
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          password,
+          accountType,
+          company: accountType === "business" ? company : undefined,
+          twoFactorEnabled: enableTwoFactor,
+        }),
       })
 
-      if (result.success) {
+      const data = await response.json()
+
+      if (response.ok) {
         setSuccess(true)
         // Redirect after a short delay to show success message
         setTimeout(() => {
-          router.push("/dashboard")
+          router.push("/signin")
         }, 1500)
       } else {
-        setError(result.message || "Failed to create account")
+        setError(data.error || "Failed to create account")
         setIsLoading(false)
       }
     } catch (err) {
@@ -224,7 +231,7 @@ export default function SignUpPage() {
               <div className="px-6">
                 <Alert className="mb-4 text-sm border-green-500 text-green-500 bg-green-500/10 animate-in fade-in-50 slide-in-from-top-5">
                   <CheckCircle className="h-4 w-4" />
-                  <AlertDescription>Account created successfully! Redirecting to dashboard...</AlertDescription>
+                  <AlertDescription>Account created successfully! Redirecting to sign in...</AlertDescription>
                 </Alert>
               </div>
             )}

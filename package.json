@@ -60,15 +60,15 @@
     "zod": "^3.24.1",
     "@auth/core": "latest",
     "nodemailer": "latest",
-    "@prisma/client": "latest",
     "prisma": "latest",
+    "@prisma/client": "latest",
     "uuid": "latest",
-    "next-auth": "latest",
-    "bcryptjs": "latest",
-    "@auth/prisma-adapter": "latest",
     "@aws-sdk/client-s3": "latest",
     "@aws-sdk/s3-request-presigner": "latest",
-    "crypto": "latest"
+    "crypto": "latest",
+    "next-auth": "latest",
+    "@auth/prisma-adapter": "latest",
+    "bcryptjs": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",
